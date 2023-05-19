@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="mb-6 flex pt-6 ml-4 mr-4 justify-between items-center gap-10">
-            <h1 class="relative w-fit page-title font-poppinBold text-2xl ">Country List</h1>
-            <input v-model="searchStr" class="border border-gray-300 rounded-md text-sm p-3" placeholder="search..."/>
+        <div class="mb-6 flex pt-6 ml-4 mr-4 justify-between items-center gap-10 flex-wrap">
+            <h1 class="relative w-fit page-title font-poppinBold text-2xl whitespace-nowrap">Country List</h1>
+            <input v-model="searchStr" class="search-box" placeholder="search..."/>
         </div>
         <div class="page-container">
             <div v-if="!isLoading">
@@ -120,5 +120,13 @@ ul>li{
 ul>li:hover{
     cursor: pointer;
     background: rgba(255, 255, 255, 0.232);
+}
+.search-box{
+    @apply border border-gray-300 rounded-md text-sm p-3;
+}
+@media only screen and (max-width:460px){
+    .search-box{
+        @apply w-full;
+    }
 }
 </style>
