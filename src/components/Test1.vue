@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mb-6 flex pt-6 ml-4 mr-4 justify-between items-center gap-10 flex-wrap">
+        <div class="" id="page_header">
             <h1 class="relative w-fit page-title font-poppinBold text-2xl whitespace-nowrap">Country List</h1>
             <input v-model="searchStr" class="search-box" placeholder="search..."/>
         </div>
@@ -82,6 +82,10 @@ const sortList=(target:string,list:any)=>{
 </script>
 
 <style scoped>
+
+#page_header{
+    @apply mb-6 flex pt-6 ml-4 mr-4 justify-between items-center gap-10 flex-wrap;
+}
 .page-title::before{
     content: '';
     width: 100%;
@@ -127,6 +131,12 @@ ul>li:hover{
 @media only screen and (max-width:460px){
     .search-box{
         @apply w-full;
+    }
+    #items{
+        max-height: calc(100vh - 250px);
+    }
+    #page_header{
+        @apply mb-1 pt-3 gap-6;
     }
 }
 </style>
