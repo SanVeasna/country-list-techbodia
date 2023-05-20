@@ -201,6 +201,11 @@ const renderIdd = (country: any) => {
     @apply grid grid-cols-3 gap-6;
 }
 
+.modal-body {
+    max-height: calc(100vh - 270px);
+    overflow: hidden auto;
+}
+
 @media only screen and (max-width:640px){
     #modal_container{
         width: 420px;
@@ -213,9 +218,6 @@ const renderIdd = (country: any) => {
 @media only screen and (max-width:460px){
     #modal_container{
         width: 320px;
-    }
-    .item-row{
-        @apply grid-cols-1;
     }
 }
 </style>
