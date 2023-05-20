@@ -20,7 +20,7 @@ interface CountryType{
     independent:boolean,
     landlocked:boolean,
     languages:[],
-    latlng:String,
+    latlng:any,
     maps:{},
     name:{common:String,official:String,nativeName:{eng:{official:String,common:String},mlt:{official:String,common:String}}},
     population:String,

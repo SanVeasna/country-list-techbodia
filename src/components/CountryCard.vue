@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white text-black rounded-lg p-4">
+    <div class="bg-white text-black rounded-lg p-4 hover:cursor-pointer" @click="showModal">
         <div class="profile">
             <div class="image">
                 <img :src="country.flags.png"/>
@@ -33,27 +33,39 @@
                 </template>
             </div>
             <div class="idd">
-                <span v-if="country.idd.suffixes&&country.idd.suffixes.length>1" class="text-ellipsis line-clamp-1">
-                    {{ country.idd.root }}(
-                    <template v-for="id,key in country.idd.suffixes">
-                        {{ id }}<span v-if="key< (country.idd.suffixes && country.idd.suffixes.length-1)">,</span>
-                    </template>)
-                </span>
-                <span v-else>{{ country.idd.root }}{{ country.idd.suffixes&&country.idd.suffixes[0] }}</span>
+                <div v-if="country.idd.suffixes && country.idd.suffixes.length > 1" class="text-ellipsis line-clamp-1">
+                    {{ renderIdd(country)}}
+                </div>
+                <span v-else>{{ country.idd.root }}{{ country.idd.suffixes && country.idd.suffixes[0] }}</span>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
 import CountryType from './../CountryType';
-defineProps<{
-    country: CountryType
-}>()
+import {nativeName} from './../Functions';
+import {CountryStore} from './../store/Country';
 
-const nativeName=(objName:any)=>{
-if(!objName) return;
-let keys=Object.keys(objName);
-return objName[keys[0]].official??'';
+const store=CountryStore();
+const props=defineProps<{
+    country: CountryType
+}>();
+const emit=defineEmits(['showModal']);
+
+const showModal=()=>{
+    store.isShowModal=true;
+    emit('showModal',props.country);
+}
+
+const renderIdd=(country:any)=>{
+    var str= country.idd.root;
+    country.idd.suffixes.map((id:string,i:number)=>{
+        if(i==0) str+='('
+        str+=id;
+        if(i< country.idd.suffixes.length - 1) str+=',';
+        else str+=')'
+    })
+    return str;
 }
 </script>
 

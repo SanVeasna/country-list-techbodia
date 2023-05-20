@@ -1,35 +1,38 @@
 <template>
     <div>
-        <div class="" id="page_header">
-            <h1 class="relative w-fit page-title font-poppinBold text-2xl whitespace-nowrap">Country List</h1>
-            <input v-model="searchStr" class="search-box" placeholder="search..."/>
-        </div>
-        <div class="page-container">
-            <div v-if="!isLoading">
-                <div id="items" v-if="countryList && countryList?.length > 0">
-                    <template v-for="country in countryList">
-                        <CountryCard :country="country"/>
-                    </template>
-                </div>
-                <div v-else class="text-content">No Country Found!</div>
+        <div :class="store.isShowModal==true?'bg-transparent':''">
+            <div class="" id="page_header">
+                <h1 class="relative w-fit page-title font-poppinBold text-2xl whitespace-nowrap">Country List</h1>
+                <input v-model="searchStr" class="search-box" placeholder="search..."/>
             </div>
-            <div v-else class="text-content">Loading...</div>
-        </div>
-        <div class="footer-section">
-            <div class="total-record">Total : {{ searchStr==''?oldList?.length: newList?.length }}</div>
-            <div class="pagination flex items-center gap-2">
-                <div class="flex items-center mr-6 gap-3">
-                    <img class="w-4 h-4 cursor-pointer" @click="sortList('DESC',countryList)" src="./../assets/images/arrow-down-line.svg"/>
-                    <img class="w-4 h4 cursor-pointer" @click="sortList('ASC', countryList)" src="./../assets/images/arrow-up-line.svg"/>
+            <div class="page-container">
+                <div v-if="!isLoading">
+                    <div id="items" v-if="countryList && countryList?.length > 0">
+                        <template v-for="country in countryList">
+                            <CountryCard :country="country" @showModal="showModal"/>
+                        </template>
+                    </div>
+                    <div v-else class="text-content">No Country Found!</div>
                 </div>
-                <div class="change-page relative flex items-center gap-1">Page {{ page }} <img @click="isShow=!isShow" class="w-5 h-5 cursor-pointer" src="./../assets/images/down1.png"/>
-                    <ul v-if="isShow">
-                        <li v-for="i in totalPage" :value="i" @click='setPage(i)'>{{ i }}</li>
-                    </ul>
+                <div v-else class="text-content">Loading...</div>
+            </div>
+            <div class="footer-section">
+                <div class="total-record">Total : {{ searchStr==''?oldList?.length: newList?.length }}</div>
+                <div class="pagination flex items-center gap-2">
+                    <div class="flex items-center mr-6 gap-3">
+                        <img class="w-4 h-4 cursor-pointer" @click="sortList('DESC',countryList)" src="./../assets/images/arrow-down-line.svg"/>
+                        <img class="w-4 h4 cursor-pointer" @click="sortList('ASC', countryList)" src="./../assets/images/arrow-up-line.svg"/>
+                    </div>
+                    <div class="change-page relative flex items-center gap-1">Page {{ page }} <img @click="isShow=!isShow" class="w-5 h-5 cursor-pointer" src="./../assets/images/down1.png"/>
+                        <ul v-if="isShow">
+                            <li v-for="i in totalPage" :value="i" @click='setPage(i)'>{{ i }}</li>
+                        </ul>
+                    </div>
+                    <div> of {{totalPage}}</div>
                 </div>
-                <div> of {{totalPage}}</div>
             </div>
         </div>
+        <Model :country="cardInfo"/>
     </div>
 </template>
 
@@ -39,6 +42,8 @@ import { onMounted, ref, watch } from 'vue';
 import CountryType from '../CountryType';
 import CountryCard from './CountryCard.vue';
 import {search,pagination,sortCountry} from './../Functions';
+import {CountryStore} from './../store/Country';
+import Model from './Model.vue';
 const countryList=ref<[CountryType]>();
 const searchStr=ref('');
 const oldList= ref<[CountryType]>();
@@ -46,8 +51,11 @@ const newList=ref<[CountryType]>();
 const isLoading=ref<boolean>(true);
 const isShow=ref(false);
 const page=ref(1);
+const cardInfo=ref<CountryType>();
 const sortDesc=ref('DESC');
 var totalPage=0;
+
+const store=CountryStore();
 
 onMounted(()=>{
     axios.get('https://restcountries.com/v3.1/all').then((response:any)=>{
@@ -78,6 +86,10 @@ const setPage=(p:number)=>{
 const sortList=(target:string,list:any)=>{
     sortDesc.value=target;
     sortCountry(sortDesc.value,list);
+}
+
+const showModal=(country:CountryType)=>{
+    cardInfo.value=country;
 }
 </script>
 
@@ -127,6 +139,11 @@ ul>li:hover{
 }
 .search-box{
     @apply border border-gray-300 rounded-md text-sm p-3;
+}
+.bg-transparent{
+    filter: blur(1px);
+    pointer-events: none;
+    user-select: none;
 }
 @media only screen and (max-width:460px){
     .search-box{

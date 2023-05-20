@@ -37,3 +37,9 @@ const fuzzy=(items:any)=>{
         })
     }
 }
+
+export const nativeName=(objName:any)=>{
+if(!objName) return;
+let keys=Object.keys(objName);
+return objName[keys[0]].official??'';
+}
